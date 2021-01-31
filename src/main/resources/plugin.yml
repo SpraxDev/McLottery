@@ -1,0 +1,27 @@
+name: ${pluginName}
+#description: Plugin description for ${pluginName}
+version: ${project.version}
+api-version: '1.16'
+
+main: ${project.groupId}.${project.artifactId}.LotteryPlugin
+
+author: Sprax2013
+website: https://github.com/SpraxDev/McLottery
+
+depend:
+  - Vault
+
+commands:
+  lottery:
+    description: 'Buy lottery tickets or manage the plugin'
+    usage: '/lottery [list | create | delete | edit | reload]'
+    permission: ${pluginName}.command.use
+
+permissions:
+  ${pluginName}.command.use:
+    description: 'Allows players to see all active lotteries and buy tickets for them'
+    default: true
+  ${pluginName}.command.admin:
+    description: 'Grants access to manage lotteries and reload the plugin'
+  ${pluginName}.updater:
+    descritpion: Notifies players about updates when joining the server
