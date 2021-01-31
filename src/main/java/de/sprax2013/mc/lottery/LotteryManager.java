@@ -3,6 +3,7 @@ package de.sprax2013.mc.lottery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -31,7 +32,7 @@ public class LotteryManager {
     private final List<Lottery> lotteries = new ArrayList<>(0);
 
     LotteryManager() {
-        this.lotteryDir = new File(LotteryPlugin.getPlugin(LotteryPlugin.class).getDataFolder(), "lotteries");
+        this.lotteryDir = new File(JavaPlugin.getPlugin(LotteryPlugin.class).getDataFolder(), "lotteries");
 
         if (this.lotteryDir.exists()) {
             for (File f : this.lotteryDir.listFiles()) {
@@ -101,9 +102,9 @@ public class LotteryManager {
         return result;
     }
 
-    public void initLottery(@NotNull Lottery lottery) throws IOException {
-        if (lottery.isDeleted()) throw new IllegalStateException("The lottery has already been deleted");
-        if (lottery.isDummy()) throw new IllegalStateException("Cannot perform this action on a dummy lottery");
+    public void initLottery(@NotNull Lottery lottery) {
+        if (lottery.isDeleted()) throw new IllegalArgumentException("The lottery has already been deleted");
+        if (lottery.isDummy()) throw new IllegalArgumentException("Cannot perform this action on a dummy lottery");
 
         LocalTime time = LocalTime.parse(lottery.getIntervalTime());
 
@@ -124,7 +125,7 @@ public class LotteryManager {
                 break;
 
             default:
-                throw new RuntimeException("Unknown IntervalType for Lottery");
+                throw new IllegalStateException("Unknown IntervalType for Lottery");
         }
 
         if (now.compareTo(nextRun) > 0) {
@@ -140,7 +141,7 @@ public class LotteryManager {
                     break;
 
                 default:
-                    throw new RuntimeException("Unknown IntervalType for Lottery");
+                    throw new IllegalStateException("Unknown IntervalType for Lottery");
             }
         }
 
@@ -174,12 +175,11 @@ public class LotteryManager {
                 }
 
                 if (error != null) {
-                    if (vaultSuccess) {
-                        if (!LotteryPlugin.getEconomy().withdrawPlayer(p, pot).transactionSuccess()) {
-                            LotteryPlugin.getPluginLogger()
-                                    .warning("Die Lotterie wird aufgrund eines Fehler abgebrochen, doch der Spieler "
-                                            + p.getName() + " (" + p.getUniqueId() + ") hat bereits seine Auszahlung erhalten!");
-                        }
+                    if (vaultSuccess &&
+                            !LotteryPlugin.getEconomy().withdrawPlayer(p, pot).transactionSuccess()) {
+                        LotteryPlugin.getPluginLogger()
+                                .warning("Die Lotterie wird aufgrund eines Fehler abgebrochen, doch der Spieler "
+                                        + p.getName() + " (" + p.getUniqueId() + ") hat bereits seine Auszahlung erhalten!");
                     }
 
                     LotteryPlugin.getPluginLogger()

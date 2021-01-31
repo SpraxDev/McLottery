@@ -5,6 +5,7 @@ import de.sprax2013.lime.configuration.ConfigEntry;
 import de.sprax2013.lime.configuration.validation.StringEntryValidator;
 import de.sprax2013.mc.lottery.LotteryPlugin;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Objects;
@@ -16,11 +17,11 @@ public class Messages {
     public static final String ERR_NOT_CUSTOM_ARMOR_STAND = "The provided ArmorStand is not an instance of '%s'";
 
     private static final Config config = new Config(
-            new File(LotteryPlugin.getPlugin(LotteryPlugin.class).getDataFolder(), "messages.yml"), Settings.HEADER)
+            new File(JavaPlugin.getPlugin(LotteryPlugin.class).getDataFolder(), "messages.yml"), Settings.HEADER)
             .withCommentEntry("ToggleChairs", "What should we tell players when they enable or disable chairs for themselves");
 
     private static final ConfigEntry PREFIX = config.createEntry(
-            "General.Prefix", "&7[&2" + LotteryPlugin.getPlugin(LotteryPlugin.class).getName() + "&7]",
+            "General.Prefix", "&7[&2" + JavaPlugin.getPlugin(LotteryPlugin.class).getName() + "&7]",
             "The prefix that can be used in all other messages")
             .setEntryValidator(StringEntryValidator.get());
 //    public static final ConfigEntry NO_PERMISSION = config.createEntry(

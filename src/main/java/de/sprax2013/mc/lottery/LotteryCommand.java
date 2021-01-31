@@ -342,9 +342,9 @@ public class LotteryCommand implements CommandExecutor, TabCompleter {
                 return 0.05;
             case SHIFT_RIGHT:
                 return 0.5;
+            default:
+                return null;
         }
-
-        return null;
     }
 
     private Inventory getLotteryCreateOrEditInv(@NotNull Player p, @Nullable Lottery lottery, @NotNull Lottery dummyLottery) {
@@ -561,14 +561,12 @@ public class LotteryCommand implements CommandExecutor, TabCompleter {
                             playSuccessSound = false;
 
                             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, .75f);
-                        } else if (dummyLottery.getIntervalType() == IntervalType.WEEKLY) {
-                            if (newRelativeDay > 7) {
-                                newRelativeDay = newRelativeDay - 7;
-                            }
-                        } else if (dummyLottery.getIntervalType() == IntervalType.MONTHLY) {
-                            if (newRelativeDay > 31) {
-                                newRelativeDay = newRelativeDay - 31;
-                            }
+                        } else if (dummyLottery.getIntervalType() == IntervalType.WEEKLY &&
+                                newRelativeDay > 7) {
+                            newRelativeDay = newRelativeDay - 7;
+                        } else if (dummyLottery.getIntervalType() == IntervalType.MONTHLY &&
+                                newRelativeDay > 31) {
+                            newRelativeDay = newRelativeDay - 31;
                         }
 
                         dummyLottery.setIntervalRelativeDay(newRelativeDay);
@@ -607,14 +605,12 @@ public class LotteryCommand implements CommandExecutor, TabCompleter {
                             playSuccessSound = false;
 
                             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, .75f);
-                        } else if (dummyLottery.getIntervalType() == IntervalType.WEEKLY) {
-                            if (newRelativeDay < 1) {
-                                newRelativeDay = newRelativeDay + 7;
-                            }
-                        } else if (dummyLottery.getIntervalType() == IntervalType.MONTHLY) {
-                            if (newRelativeDay < 1) {
-                                newRelativeDay = newRelativeDay + 31;
-                            }
+                        } else if (dummyLottery.getIntervalType() == IntervalType.WEEKLY &&
+                                newRelativeDay < 1) {
+                            newRelativeDay = newRelativeDay + 7;
+                        } else if (dummyLottery.getIntervalType() == IntervalType.MONTHLY &&
+                                newRelativeDay < 1) {
+                            newRelativeDay = newRelativeDay + 31;
                         }
 
                         dummyLottery.setIntervalRelativeDay(newRelativeDay);
@@ -786,7 +782,7 @@ public class LotteryCommand implements CommandExecutor, TabCompleter {
     }
 
     private double round(double value) {
-        return new BigDecimal(value)
+        return BigDecimal.valueOf(value)
                 .setScale(2, RoundingMode.HALF_UP)
                 .doubleValue();
     }

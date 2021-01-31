@@ -3,6 +3,7 @@ package de.sprax2013.mc.lottery.files;
 import de.sprax2013.lime.configuration.Config;
 import de.sprax2013.lime.configuration.ConfigEntry;
 import de.sprax2013.mc.lottery.LotteryPlugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
@@ -13,7 +14,7 @@ public class Settings {
             "Statistics: https://bstats.org/plugin/bukkit/Lottery_/10192";
 
     private static final Config config = new Config(
-            new File(LotteryPlugin.getPlugin(LotteryPlugin.class).getDataFolder(), "config.yml"), HEADER);
+            new File(JavaPlugin.getPlugin(LotteryPlugin.class).getDataFolder(), "config.yml"), HEADER);
 
     public static final ConfigEntry UPDATER_ENABLED = config.createEntry(
             "Updater.CheckForUpdates", true,
@@ -21,7 +22,7 @@ public class Settings {
     public static final ConfigEntry UPDATER_NOTIFY_ON_JOIN = config.createEntry(
             "Updater.NotifyOnJoin", true,
             () -> "Should be notify admins when they join the server? (Permission: " +
-                    LotteryPlugin.getPlugin(LotteryPlugin.class).getName() + ".updater)");
+                    JavaPlugin.getPlugin(LotteryPlugin.class).getName() + ".updater)");
 
     private Settings() {
         throw new IllegalStateException("Utility class");

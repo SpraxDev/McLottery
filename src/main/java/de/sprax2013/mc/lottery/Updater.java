@@ -66,7 +66,7 @@ public class Updater implements Listener {
                         timer.cancel();
                     }
                 }
-            }, 2000, 1000 * 60 * 60 * 3);   // Check every 3h
+            }, 2000, 1000L * 60 * 60 * 3);   // Check every 3h
 
             Bukkit.getPluginManager().registerEvents(this, this.plugin);
         } else if (this.timer != null) {
@@ -96,7 +96,7 @@ public class Updater implements Listener {
         if (isNewerVersion(currVersion, versionStr)) {
             this.newerVersion = versionStr;
 
-            LotteryPlugin.getPluginLogger()
+            plugin.getLogger()
                     .info(() -> String.format("Found a new update v%s -> v%s — Download the update from:%nSpigotMC: %s%nSongoda: %s%nGitHub: %s%n%nChangelog: %s",
                             currVersion, versionStr, SPIGOT_MC_URL, SONGODA_URL, GITHUB_URL, getChangelogUrl(versionStr)));
         } else {
@@ -113,7 +113,7 @@ public class Updater implements Listener {
 
         e.getPlayer().spigot().sendMessage(
                 new ComponentBuilder("[").color(ChatColor.GRAY)
-                        .append(LotteryPlugin.getPlugin(LotteryPlugin.class).getName()).color(ChatColor.GOLD)
+                        .append(plugin.getName()).color(ChatColor.GOLD)
                         .append("] ").color(ChatColor.GRAY)
                         .append("Found a new update v" +
                                 plugin.getDescription().getVersion() + " -> v" + newerVersion).color(ChatColor.YELLOW)
@@ -150,10 +150,11 @@ public class Updater implements Listener {
      * @return true, if {@code ver1} is newer than {@code ver2}, false otherwise
      */
     public boolean isNewerVersion(String ver1, String ver2) {
-        int[] ver1Num, ver2Num;
+        int[] ver1Num;
+        int[] ver2Num;
 
-        String[] ver1Args = ver1.split("-")[0].split("\\."),
-                ver2Args = ver2.split("-")[0].split("\\.");
+        String[] ver1Args = ver1.split("-")[0].split("\\.");
+        String[] ver2Args = ver2.split("-")[0].split("\\.");
 
         ver1Num = new int[ver1Args.length];
         for (int i = 0; i < ver1Args.length; i++) {
@@ -175,11 +176,12 @@ public class Updater implements Listener {
         }
 
         if (ver1.contains("-")) {
-            if (!ver2.contains("-"))
+            if (!ver2.contains("-")) {
                 return true; // true, if they have same SemVer but ver1 has a suffix attached while ver2 does not
+            }
 
-            String suffix1 = ver1.substring(ver1.lastIndexOf('-')),
-                    suffix2 = ver2.substring(ver2.lastIndexOf('-'));
+            String suffix1 = ver1.substring(ver1.lastIndexOf('-'));
+            String suffix2 = ver2.substring(ver2.lastIndexOf('-'));
 
             return !suffix1.equals(suffix2);    // true, if versions have suffix like '-SNAPSHOT' while being same SemVer
         }

@@ -122,7 +122,7 @@ public class Lottery {
     public UUID getRandomParticipant() {
         List<UUID> participants = getParticipants();
 
-        if (participants.size() > 0) {
+        if (!participants.isEmpty()) {
             return participants.get(ThreadLocalRandom.current().nextInt(participants.size()));
         }
 
